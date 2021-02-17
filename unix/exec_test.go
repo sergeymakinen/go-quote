@@ -32,16 +32,7 @@ func TestDoubleQuote_Quote_Exec(t *testing.T) {
 }
 
 func TestANSIC_Quote_Exec(t *testing.T) {
-	// macOS uses an ancient Bash, so testing for \uxxxx support
-	var shell string
-	for _, s := range []string{"sh", "bash", "zsh"} {
-		out, err := exec.Command(s, "-c", `printf '%s\n' $'\u200D'`).Output()
-		if err == nil && !bytes.Contains(out, []byte(`200D`)) {
-			shell = s
-			break
-		}
-	}
-	if shell == "" {
+	if ansiCShell == "" {
 		t.Skip(`no shell with \uxxxx support`)
 	}
 	for _, it := range test.InputTests('\'', '\t', '\n', ' ', '$', '"') {
@@ -51,17 +42,33 @@ func TestANSIC_Quote_Exec(t *testing.T) {
 				t.Skipf("it.Name=%s", it.Name)
 			}
 			t.Parallel()
-			test.TestExecOutput(t, it.Input, shell, "-c", `printf '%s\n' `+ANSIC.Quote(it.Input))
+			test.TestExecOutput(t, it.Input, ansiCShell, "-c", `printf '%s\n' `+ANSIC.Quote(it.Input))
 		})
 	}
 }
 
 func TestANSIC_QuoteBinary_Exec(t *testing.T) {
+	if ansiCShell == "" {
+		t.Skip(`no shell with \uxxxx support`)
+	}
 	for _, it := range test.InputTests('\'', '\t', '\n', ' ', '$', '"') {
 		it := it
 		t.Run(it.Name, func(t *testing.T) {
 			t.Parallel()
-			test.TestExecOutput(t, it.Input, "sh", "-c", `printf '%s\n' `+ANSIC.QuoteBinary([]byte(it.Input)))
+			test.TestExecOutput(t, it.Input, ansiCShell, "-c", `printf '%s\n' `+ANSIC.QuoteBinary([]byte(it.Input)))
 		})
+	}
+}
+
+var ansiCShell string
+
+func init() {
+	// macOS uses an ancient Bash, so testing for \uxxxx support
+	for _, s := range []string{"bash", "zsh"} {
+		out, err := exec.Command(s, "-c", `printf '%s\n' $'\u200D'`).Output()
+		if err == nil && !bytes.Contains(out, []byte("$")) && !bytes.Contains(out, []byte(`200D`)) {
+			ansiCShell = s
+			break
+		}
 	}
 }

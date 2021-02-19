@@ -3,7 +3,7 @@
 [![tests](https://github.com/sergeymakinen/go-quote/workflows/tests/badge.svg)](https://github.com/sergeymakinen/go-quote/actions?query=workflow%3Atests)
 [![Go Reference](https://pkg.go.dev/badge/github.com/sergeymakinen/go-quote.svg)](https://pkg.go.dev/github.com/sergeymakinen/go-quote)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sergeymakinen/go-quote)](https://goreportcard.com/report/github.com/sergeymakinen/go-quote)
-[![codecov](https://codecov.io/gh/sergeymakinen/go-quote/branch/master/graph/badge.svg)](https://codecov.io/gh/sergeymakinen/go-quote)
+[![codecov](https://codecov.io/gh/sergeymakinen/go-quote/branch/main/graph/badge.svg)](https://codecov.io/gh/sergeymakinen/go-quote)
 
 Package quote defines interfaces shared by other packages
 that quote command-line arguments and variables.

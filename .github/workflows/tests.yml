@@ -22,7 +22,6 @@ jobs:
           - windows-latest
           - macos-latest
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
     steps:
       - name: Install Go
         uses: actions/setup-go@v2
@@ -36,7 +35,7 @@ jobs:
         run: go test -coverprofile=coverage.txt -covermode=atomic ./...
         if: runner.os != 'Windows'
       - name: Test (on Windows)
-        run: go test -coverprofile=coverage.txt -covermode=atomic ./...
+        run: go test -timeout 30m -coverprofile=coverage.txt -covermode=atomic ./...
         shell: cmd
         if: runner.os == 'Windows'
       - name: Upload coverage to Codecov

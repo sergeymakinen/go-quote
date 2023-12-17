@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/sergeymakinen/go-quote"
-	"github.com/sergeymakinen/go-quote/internal/test"
+	"github.com/sergeymakinen/go-quote/internal/testutil"
 )
 
 func TestANSIC_Quote_QuoteBinary_Unquote_UnquoteBinary(t *testing.T) {
@@ -49,12 +49,12 @@ func TestANSIC_Quote_QuoteBinary_Unquote_UnquoteBinary(t *testing.T) {
 	for _, td := range tests {
 		t.Run(td.Name, func(t *testing.T) {
 			quoted := ANSIC.Quote(td.Input)
-			test.TestDiff(t, "ANSIC.Quote() ", td.Output, quoted)
+			testutil.TestDiff(t, "ANSIC.Quote() ", td.Output, quoted)
 			unquoted, err := ANSIC.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("ANSIC.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "ANSIC.Unquote()", td.Input, unquoted)
+			testutil.TestDiff(t, "ANSIC.Unquote()", td.Input, unquoted)
 		})
 		t.Run(td.Name+";binary", func(t *testing.T) {
 			quoted := ANSIC.QuoteBinary([]byte(td.Input))
@@ -62,12 +62,12 @@ func TestANSIC_Quote_QuoteBinary_Unquote_UnquoteBinary(t *testing.T) {
 			if expected == "" {
 				expected = td.Output
 			}
-			test.TestDiff(t, "ANSIC.QuoteBinary() ", expected, quoted)
+			testutil.TestDiff(t, "ANSIC.QuoteBinary() ", expected, quoted)
 			unquoted, err := ANSIC.UnquoteBinary(quoted)
 			if err != nil {
 				t.Fatalf("ANSIC.UnquoteBinary() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "ANSIC.UnquoteBinary()", td.Input, string(unquoted))
+			testutil.TestDiff(t, "ANSIC.UnquoteBinary()", td.Input, string(unquoted))
 		})
 	}
 }
@@ -108,14 +108,14 @@ func TestANSIC_Unquote_UnquoteBinary(t *testing.T) {
 			if err != nil {
 				t.Fatalf("ANSIC.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "ANSIC.Unquote()", td.Output, unquoted)
+			testutil.TestDiff(t, "ANSIC.Unquote()", td.Output, unquoted)
 		})
 		t.Run(td.Name+";binary", func(t *testing.T) {
 			unquoted, err := ANSIC.UnquoteBinary(td.Input)
 			if err != nil {
 				t.Fatalf("ANSIC.UnquoteBinary() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "ANSIC.UnquoteBinary()", td.Output, string(unquoted))
+			testutil.TestDiff(t, "ANSIC.UnquoteBinary()", td.Output, string(unquoted))
 		})
 	}
 }
@@ -223,7 +223,7 @@ func TestANSIC_Unquote_UnquoteBinary_ShouldFail(t *testing.T) {
 }
 
 func TestANSIC_Quote_Unquote_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('\'', '\t', '\n', ' ', '$', '"') {
+	for _, it := range testutil.InputTests('\'', '\t', '\n', ' ', '$', '"') {
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") {
 				t.Skipf("it.Name=%s", it.Name)
@@ -233,20 +233,20 @@ func TestANSIC_Quote_Unquote_InputTests(t *testing.T) {
 			if err != nil {
 				t.Fatalf("ANSIC.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "ANSIC.Unquote()", it.Input, unquoted)
+			testutil.TestDiff(t, "ANSIC.Unquote()", it.Input, unquoted)
 		})
 	}
 }
 
 func TestANSIC_QuoteBinary_UnquoteBinary_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('\'', '\t', '\n', ' ', '$', '"') {
+	for _, it := range testutil.InputTests('\'', '\t', '\n', ' ', '$', '"') {
 		t.Run(it.Name, func(t *testing.T) {
 			quoted := ANSIC.QuoteBinary([]byte(it.Input))
 			unquoted, err := ANSIC.UnquoteBinary(quoted)
 			if err != nil {
 				t.Fatalf("ANSIC.UnquoteBinary() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "ANSIC.UnquoteBinary()", it.Input, string(unquoted))
+			testutil.TestDiff(t, "ANSIC.UnquoteBinary()", it.Input, string(unquoted))
 		})
 	}
 }

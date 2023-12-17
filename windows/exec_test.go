@@ -9,45 +9,45 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sergeymakinen/go-quote/internal/test"
+	"github.com/sergeymakinen/go-quote/internal/testutil"
 	"golang.org/x/sys/windows/registry"
 )
 
 func TestCmd_Quote_Exec(t *testing.T) {
-	for _, it := range test.InputTests('"') {
+	for _, it := range testutil.InputTests('"') {
 		it := it
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") || strings.Contains(it.Name, `\n`) {
 				t.Skipf("Name=%s", it.Name)
 			}
 			t.Parallel()
-			test.TestExecOutput(t, it.Input, "cmd.exe", "/c", `"chcp 65001 > NUL && echo `+Cmd.Quote(it.Input)+`"`)
+			testutil.TestExecOutput(t, it.Input, "cmd.exe", "/c", `"chcp 65001 > NUL && echo `+Cmd.Quote(it.Input)+`"`)
 		})
 	}
 }
 
 func TestPSSingleQuote_Quote_Exec(t *testing.T) {
-	for _, it := range test.InputTests('\'', '$', '`') {
+	for _, it := range testutil.InputTests('\'', '$', '`') {
 		it := it
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") {
 				t.Skipf("Name=%s", it.Name)
 			}
 			t.Parallel()
-			test.TestExecOutput(t, it.Input, "powershell.exe", "-NoProfile", "-NonInteractive", "-Command", Argv.Quote("$OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8; echo "+PSSingleQuote.Quote(it.Input)))
+			testutil.TestExecOutput(t, it.Input, "powershell.exe", "-NoProfile", "-NonInteractive", "-Command", Argv.Quote("$OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8; echo "+PSSingleQuote.Quote(it.Input)))
 		})
 	}
 }
 
 func TestPSDoubleQuote_Quote_Exec(t *testing.T) {
-	for _, it := range test.InputTests('\'', '$', '`') {
+	for _, it := range testutil.InputTests('\'', '$', '`') {
 		it := it
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") {
 				t.Skipf("Name=%s", it.Name)
 			}
 			t.Parallel()
-			test.TestExecOutput(t, it.Input, "powershell.exe", "-NoProfile", "-NonInteractive", "-Command", Argv.Quote("$OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8; echo "+PSDoubleQuote.Quote(it.Input)))
+			testutil.TestExecOutput(t, it.Input, "powershell.exe", "-NoProfile", "-NonInteractive", "-Command", Argv.Quote("$OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8; echo "+PSDoubleQuote.Quote(it.Input)))
 		})
 	}
 }
@@ -56,14 +56,14 @@ func TestPwshDoubleQuote_Quote_Exec(t *testing.T) {
 	if _, err := exec.LookPath("pwsh.exe"); err != nil {
 		t.Skip(`no pwsh.exe`)
 	}
-	for _, it := range test.InputTests('\'', '$', '`') {
+	for _, it := range testutil.InputTests('\'', '$', '`') {
 		it := it
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") {
 				t.Skipf("Name=%s", it.Name)
 			}
 			t.Parallel()
-			test.TestExecOutput(t, it.Input, "pwsh.exe", "-NoProfile", "-NonInteractive", "-Command", Argv.Quote("$OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8; echo "+PwshDoubleQuote.Quote(it.Input)))
+			testutil.TestExecOutput(t, it.Input, "pwsh.exe", "-NoProfile", "-NonInteractive", "-Command", Argv.Quote("$OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8; echo "+PwshDoubleQuote.Quote(it.Input)))
 		})
 	}
 }
@@ -74,16 +74,16 @@ func TestArgv_Quote_Exec(t *testing.T) {
 	if k, err := openEnvKey(); err == nil {
 		k.DeleteValue(envName)
 	}
-	for _, it := range test.InputTests('"') {
+	for _, it := range testutil.InputTests('"') {
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") {
 				t.Skipf("Name=%s", it.Name)
 			}
-			_, cmd, err := test.Output("setx.exe", envName, Argv.Quote(it.Input))
+			_, cmd, err := testutil.Output("setx.exe", envName, Argv.Quote(it.Input))
 			if err != nil {
 				t.Fatalf("Cmd.Output() = _, %v; want nil\nCmd: %v", err, cmd)
 			}
-			test.TestOutput(t, cmd, it.Input, envValue())
+			testutil.TestOutput(t, cmd, it.Input, envValue())
 		})
 	}
 }
@@ -123,17 +123,17 @@ func TestMsiexec_Quote_Exec(t *testing.T) {
 	if err != nil {
 		panic("failed to get current directory: " + err.Error())
 	}
-	msiPath := filepath.Join(wd, "testdata/test.msi")
-	for _, it := range test.InputTests('"') {
+	msiPath := filepath.Join(wd, "testdata/testutil.msi")
+	for _, it := range testutil.InputTests('"') {
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") {
 				t.Skipf("Name=%s", it.Name)
 			}
-			_, cmd, err := test.Output("msiexec.exe", "/quiet", "/i", msiPath, msiProp+"="+Msiexec.Quote(it.Input))
+			_, cmd, err := testutil.Output("msiexec.exe", "/quiet", "/i", msiPath, msiProp+"="+Msiexec.Quote(it.Input))
 			if err != nil {
 				t.Fatalf("Cmd.Output() = _, %v; want nil\nCmd: %v", err, cmd)
 			}
-			test.TestOutput(t, cmd, it.Input, msiValue())
+			testutil.TestOutput(t, cmd, it.Input, msiValue())
 		})
 	}
 }

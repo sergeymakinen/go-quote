@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/sergeymakinen/go-quote/internal/test"
+	"github.com/sergeymakinen/go-quote/internal/testutil"
 )
 
 func Example() {
@@ -53,25 +53,25 @@ func TestCmd_Quote_Unquote(t *testing.T) {
 	for _, td := range tests {
 		t.Run(td.Name, func(t *testing.T) {
 			quoted := Cmd.Quote(td.Input)
-			test.TestDiff(t, "Cmd.Quote() ", td.Output, quoted)
+			testutil.TestDiff(t, "Cmd.Quote() ", td.Output, quoted)
 			unquoted, err := Cmd.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("Cmd.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "Cmd.Unquote()", td.Input, unquoted)
+			testutil.TestDiff(t, "Cmd.Unquote()", td.Input, unquoted)
 		})
 	}
 }
 
 func TestCmd_Quote_Unquote_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('"') {
+	for _, it := range testutil.InputTests('"') {
 		t.Run(it.Name, func(t *testing.T) {
 			quoted := Cmd.Quote(it.Input)
 			unquoted, err := Cmd.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("Cmd.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "Cmd.Unquote()", it.Input, unquoted)
+			testutil.TestDiff(t, "Cmd.Unquote()", it.Input, unquoted)
 		})
 	}
 }

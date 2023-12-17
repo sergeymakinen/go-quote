@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/sergeymakinen/go-quote"
-	"github.com/sergeymakinen/go-quote/internal/test"
+	"github.com/sergeymakinen/go-quote/internal/testutil"
 )
 
 func TestMsiexec_Quote(t *testing.T) {
@@ -26,12 +26,12 @@ func TestMsiexec_Quote(t *testing.T) {
 	for _, td := range tests {
 		t.Run(td.Name, func(t *testing.T) {
 			quoted := Msiexec.Quote(td.Input)
-			test.TestDiff(t, "Msiexec.Quote() ", td.Output, quoted)
+			testutil.TestDiff(t, "Msiexec.Quote() ", td.Output, quoted)
 			unquoted, err := Msiexec.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("Msiexec.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "Msiexec.Unquote()", td.Input, unquoted)
+			testutil.TestDiff(t, "Msiexec.Unquote()", td.Input, unquoted)
 		})
 	}
 }
@@ -41,7 +41,7 @@ func TestMsiexec_Unquote(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Msiexec.Unquote() = _, %v; want nil", err)
 	}
-	test.TestDiff(t, "Msiexec.Unquote()", `ab"""cd"ef`, unquoted)
+	testutil.TestDiff(t, "Msiexec.Unquote()", `ab"""cd"ef`, unquoted)
 }
 
 func TestMsiexec_Unquote_ShouldFail(t *testing.T) {
@@ -93,14 +93,14 @@ func TestMsiexec_Unquote_ShouldFail(t *testing.T) {
 }
 
 func TestMsiexec_Quote_Unquote_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('"') {
+	for _, it := range testutil.InputTests('"') {
 		t.Run(it.Name, func(t *testing.T) {
 			quoted := Msiexec.Quote(it.Input)
 			unquoted, err := Msiexec.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("Msiexec.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "Msiexec.Unquote()", it.Input, unquoted)
+			testutil.TestDiff(t, "Msiexec.Unquote()", it.Input, unquoted)
 		})
 	}
 }

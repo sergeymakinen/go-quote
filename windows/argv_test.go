@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/sergeymakinen/go-quote"
-	"github.com/sergeymakinen/go-quote/internal/test"
+	"github.com/sergeymakinen/go-quote/internal/testutil"
 )
 
 func TestArgv_Quote(t *testing.T) {
@@ -31,12 +31,12 @@ func TestArgv_Quote(t *testing.T) {
 	for _, td := range tests {
 		t.Run(td.Name, func(t *testing.T) {
 			quoted := Argv.Quote(td.Input)
-			test.TestDiff(t, "Argv.Quote() ", td.Output, quoted)
+			testutil.TestDiff(t, "Argv.Quote() ", td.Output, quoted)
 			unquoted, err := Argv.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("Argv.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "Argv.Unquote()", td.Input, unquoted)
+			testutil.TestDiff(t, "Argv.Unquote()", td.Input, unquoted)
 		})
 	}
 }
@@ -62,7 +62,7 @@ func TestArgv_Unquote(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Argv.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "Argv.Unquote()", td.Output, unquoted)
+			testutil.TestDiff(t, "Argv.Unquote()", td.Output, unquoted)
 		})
 	}
 }
@@ -116,14 +116,14 @@ func TestArgv_Unquote_ShouldFail(t *testing.T) {
 }
 
 func TestArgv_Quote_Unquote_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('"') {
+	for _, it := range testutil.InputTests('"') {
 		t.Run(it.Name, func(t *testing.T) {
 			quoted := Argv.Quote(it.Input)
 			unquoted, err := Argv.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("Argv.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "Argv.Unquote()", it.Input, unquoted)
+			testutil.TestDiff(t, "Argv.Unquote()", it.Input, unquoted)
 		})
 	}
 }

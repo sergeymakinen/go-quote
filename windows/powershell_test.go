@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/sergeymakinen/go-quote"
-	"github.com/sergeymakinen/go-quote/internal/test"
+	"github.com/sergeymakinen/go-quote/internal/testutil"
 )
 
 func TestPSSingleQuote_Quote(t *testing.T) {
@@ -27,12 +27,12 @@ func TestPSSingleQuote_Quote(t *testing.T) {
 	for _, td := range tests {
 		t.Run(td.Name, func(t *testing.T) {
 			quoted := PSSingleQuote.Quote(td.Input)
-			test.TestDiff(t, "PSSingleQuote.Quote() ", td.Output, quoted)
+			testutil.TestDiff(t, "PSSingleQuote.Quote() ", td.Output, quoted)
 			unquoted, err := PSSingleQuote.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("PSSingleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "PSSingleQuote.Unquote()", td.Input, unquoted)
+			testutil.TestDiff(t, "PSSingleQuote.Unquote()", td.Input, unquoted)
 		})
 	}
 }
@@ -42,7 +42,7 @@ func TestPSSingleQuote_Unquote(t *testing.T) {
 	if err != nil {
 		t.Fatalf("PSSingleQuote.Unquote() = _, %v; want nil", err)
 	}
-	test.TestDiff(t, "PSSingleQuote.Unquote()", "ab'''cd'ef", unquoted)
+	testutil.TestDiff(t, "PSSingleQuote.Unquote()", "ab'''cd'ef", unquoted)
 }
 
 func TestPSSingleQuote_Unquote_ShouldFail(t *testing.T) {
@@ -94,14 +94,14 @@ func TestPSSingleQuote_Unquote_ShouldFail(t *testing.T) {
 }
 
 func TestPSSingleQuote_Quote_Unquote_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('\'', '$', '`') {
+	for _, it := range testutil.InputTests('\'', '$', '`') {
 		t.Run(it.Name, func(t *testing.T) {
 			quoted := PSSingleQuote.Quote(it.Input)
 			unquoted, err := PSSingleQuote.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("PSSingleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "PSSingleQuote.Unquote()", it.Input, unquoted)
+			testutil.TestDiff(t, "PSSingleQuote.Unquote()", it.Input, unquoted)
 		})
 	}
 }
@@ -148,12 +148,12 @@ func TestPSDoubleQuote_Quote_Unquote(t *testing.T) {
 	for _, td := range tests {
 		t.Run(td.Name, func(t *testing.T) {
 			quoted := PSDoubleQuote.Quote(td.Input)
-			test.TestDiff(t, "PSDoubleQuote.Quote() ", td.Output, quoted)
+			testutil.TestDiff(t, "PSDoubleQuote.Quote() ", td.Output, quoted)
 			unquoted, err := PSDoubleQuote.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("PSDoubleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "PSDoubleQuote.Unquote()", td.Input, unquoted)
+			testutil.TestDiff(t, "PSDoubleQuote.Unquote()", td.Input, unquoted)
 		})
 		t.Run(td.Name+";pwsh.exe", func(t *testing.T) {
 			quoted := PwshDoubleQuote.Quote(td.Input)
@@ -161,12 +161,12 @@ func TestPSDoubleQuote_Quote_Unquote(t *testing.T) {
 			if expected == "" {
 				expected = td.Output
 			}
-			test.TestDiff(t, "PwshDoubleQuote.Quote() ", expected, quoted)
+			testutil.TestDiff(t, "PwshDoubleQuote.Quote() ", expected, quoted)
 			unquoted, err := PwshDoubleQuote.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("PwshDoubleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "PwshDoubleQuote.Unquote()", td.Input, unquoted)
+			testutil.TestDiff(t, "PwshDoubleQuote.Unquote()", td.Input, unquoted)
 		})
 	}
 }
@@ -202,14 +202,14 @@ func TestPSDoubleQuote_Unquote(t *testing.T) {
 			if err != nil {
 				t.Fatalf("PSDoubleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "PSDoubleQuote.Unquote()", td.Output, unquoted)
+			testutil.TestDiff(t, "PSDoubleQuote.Unquote()", td.Output, unquoted)
 		})
 		t.Run(td.Name+";pwsh.exe", func(t *testing.T) {
 			unquoted, err := PwshDoubleQuote.Unquote(td.Input)
 			if err != nil {
 				t.Fatalf("PwshDoubleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "PwshDoubleQuote.Unquote()", td.Output, unquoted)
+			testutil.TestDiff(t, "PwshDoubleQuote.Unquote()", td.Output, unquoted)
 		})
 	}
 }
@@ -325,7 +325,7 @@ func TestPSDoubleQuote_Unquote_ShouldFail(t *testing.T) {
 }
 
 func TestPSDoubleQuote_Quote_Unquote_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('\'', '$', '`') {
+	for _, it := range testutil.InputTests('\'', '$', '`') {
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") {
 				t.Skipf("it.Name=%s", it.Name)
@@ -335,13 +335,13 @@ func TestPSDoubleQuote_Quote_Unquote_InputTests(t *testing.T) {
 			if err != nil {
 				t.Fatalf("PSDoubleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "PSDoubleQuote.Unquote()", it.Input, unquoted)
+			testutil.TestDiff(t, "PSDoubleQuote.Unquote()", it.Input, unquoted)
 		})
 	}
 }
 
 func TestPwshDoubleQuote_Quote_Unquote_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('\'', '$', '`') {
+	for _, it := range testutil.InputTests('\'', '$', '`') {
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") {
 				t.Skipf("it.Name=%s", it.Name)
@@ -351,7 +351,7 @@ func TestPwshDoubleQuote_Quote_Unquote_InputTests(t *testing.T) {
 			if err != nil {
 				t.Fatalf("PwshDoubleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "PwshDoubleQuote.Unquote()", it.Input, unquoted)
+			testutil.TestDiff(t, "PwshDoubleQuote.Unquote()", it.Input, unquoted)
 		})
 	}
 }

@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/sergeymakinen/go-quote"
-	"github.com/sergeymakinen/go-quote/internal/test"
+	"github.com/sergeymakinen/go-quote/internal/testutil"
 )
 
 func Example() {
@@ -50,12 +50,12 @@ func TestSingleQuote_Quote(t *testing.T) {
 	for _, td := range tests {
 		t.Run(td.Name, func(t *testing.T) {
 			quoted := SingleQuote.Quote(td.Input)
-			test.TestDiff(t, "SingleQuote.Quote() ", td.Output, quoted)
+			testutil.TestDiff(t, "SingleQuote.Quote() ", td.Output, quoted)
 			unquoted, err := SingleQuote.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("SingleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "SingleQuote.Unquote()", td.Input, unquoted)
+			testutil.TestDiff(t, "SingleQuote.Unquote()", td.Input, unquoted)
 		})
 	}
 }
@@ -86,7 +86,7 @@ func TestSingleQuote_Unquote(t *testing.T) {
 			if err != nil {
 				t.Fatalf("SingleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "SingleQuote.Unquote()", td.Output, unquoted)
+			testutil.TestDiff(t, "SingleQuote.Unquote()", td.Output, unquoted)
 		})
 	}
 }
@@ -140,14 +140,14 @@ func TestSingleQuote_Unquote_ShouldFail(t *testing.T) {
 }
 
 func TestSingleQuote_Quote_Unquote_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('\'', '\t', '\n', ' ', '"') {
+	for _, it := range testutil.InputTests('\'', '\t', '\n', ' ', '"') {
 		t.Run(it.Name, func(t *testing.T) {
 			quoted := SingleQuote.Quote(it.Input)
 			unquoted, err := SingleQuote.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("SingleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "SingleQuote.Unquote()", it.Input, unquoted)
+			testutil.TestDiff(t, "SingleQuote.Unquote()", it.Input, unquoted)
 		})
 	}
 }
@@ -170,12 +170,12 @@ func TestDoubleQuote_Quote_Unquote(t *testing.T) {
 	for _, td := range tests {
 		t.Run(td.Name, func(t *testing.T) {
 			quoted := DoubleQuote.Quote(td.Input)
-			test.TestDiff(t, "DoubleQuote.Quote() ", td.Output, quoted)
+			testutil.TestDiff(t, "DoubleQuote.Quote() ", td.Output, quoted)
 			unquoted, err := DoubleQuote.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("DoubleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "DoubleQuote.Unquote()", td.Input, unquoted)
+			testutil.TestDiff(t, "DoubleQuote.Unquote()", td.Input, unquoted)
 		})
 	}
 }
@@ -201,7 +201,7 @@ func TestDoubleQuote_Unquote(t *testing.T) {
 			if err != nil {
 				t.Fatalf("DoubleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "DoubleQuote.Unquote()", td.Output, unquoted)
+			testutil.TestDiff(t, "DoubleQuote.Unquote()", td.Output, unquoted)
 		})
 	}
 }
@@ -287,14 +287,14 @@ func TestDoubleQuote_Unquote_ShouldFail(t *testing.T) {
 }
 
 func TestDoubleQuote_Quote_Unquote_InputTests(t *testing.T) {
-	for _, it := range test.InputTests('"', '\t', '\n', ' ', '$', '\'') {
+	for _, it := range testutil.InputTests('"', '\t', '\n', ' ', '$', '\'') {
 		t.Run(it.Name, func(t *testing.T) {
 			quoted := DoubleQuote.Quote(it.Input)
 			unquoted, err := DoubleQuote.Unquote(quoted)
 			if err != nil {
 				t.Fatalf("DoubleQuote.Unquote() = _, %v; want nil", err)
 			}
-			test.TestDiff(t, "DoubleQuote.Unquote()", it.Input, unquoted)
+			testutil.TestDiff(t, "DoubleQuote.Unquote()", it.Input, unquoted)
 		})
 	}
 }

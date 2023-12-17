@@ -123,7 +123,7 @@ func TestMsiexec_Quote_Exec(t *testing.T) {
 	if err != nil {
 		panic("failed to get current directory: " + err.Error())
 	}
-	msiPath := filepath.Join(wd, "testdata/testutil.msi")
+	msiPath := filepath.Join(wd, "testdata/test.msi")
 	for _, it := range testutil.InputTests('"') {
 		t.Run(it.Name, func(t *testing.T) {
 			if strings.HasPrefix(it.Name, "bytes:") {

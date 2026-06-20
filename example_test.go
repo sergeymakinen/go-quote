@@ -7,7 +7,7 @@ import (
 	"github.com/sergeymakinen/go-quote/windows"
 )
 
-func ExampleQuoting_unix() {
+func Example_unix() {
 	filename := `Long File With 'Single' & "Double" Quotes.txt`
 	fmt.Println(unix.SingleQuote.MustQuote(filename))
 	// Echoing inside 'sh -c' requires a quoting to make it safe with an arbitrary string
@@ -25,7 +25,7 @@ func ExampleQuoting_unix() {
 	// Long File With 'Single' & "Double" Quotes.txt
 }
 
-func ExampleQuoting_windows() {
+func Example_windows() {
 	// If you have to deal with a different from Argv command-line quoting
 	// when starting processes on Windows, don't forget to manually create a command-line
 	// via the CmdLine SysProcAttr attribute:

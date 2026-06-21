@@ -1,6 +1,6 @@
 # quote
 
-[![tests](https://github.com/sergeymakinen/go-quote/workflows/tests/badge.svg)](https://github.com/sergeymakinen/go-quote/actions?query=workflow%3Atests)
+[![Test](https://github.com/sergeymakinen/go-quote/actions/workflows/test.yml/badge.svg)](https://github.com/sergeymakinen/go-quote/actions/workflows/test.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/sergeymakinen/go-quote.svg)](https://pkg.go.dev/github.com/sergeymakinen/go-quote)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sergeymakinen/go-quote)](https://goreportcard.com/report/github.com/sergeymakinen/go-quote)
 [![codecov](https://codecov.io/gh/sergeymakinen/go-quote/branch/main/graph/badge.svg)](https://codecov.io/gh/sergeymakinen/go-quote)
@@ -23,7 +23,6 @@ Then import the package into your own code:
 ```go
 import "github.com/sergeymakinen/go-quote"
 ```
-
 
 ## Example
 

@@ -24,7 +24,7 @@ jobs:
       - name: Set git to turn off auto-converting line endings
         run: git config --global core.autocrlf false
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Test (not on Windows)
         run: go test -coverprofile=coverage.txt -covermode=atomic ./...
         if: runner.os != 'Windows'

@@ -1,5 +1,7 @@
 on:
   push:
+    branches:
+      - '**'
   pull_request:
 name: Test
 jobs:
@@ -17,14 +19,14 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Install Go
-        uses: actions/setup-go@v6
-        with:
-          go-version: ${{ matrix.go-version }}
       - name: Set git to turn off auto-converting line endings
         run: git config --global core.autocrlf false
       - name: Checkout code
         uses: actions/checkout@v7
+      - name: Install Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go-version }}
       - name: Test (not on Windows)
         run: go test -coverprofile=coverage.txt -covermode=atomic ./...
         if: runner.os != 'Windows'
